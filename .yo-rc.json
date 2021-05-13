@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.ps.cromdata"
+    },
+    "jhipsterVersion": "6.10.5",
+    "applicationType": "monolith",
+    "baseName": "CronDataBackend",
+    "packageName": "com.ps.cromdata",
+    "packageFolder": "com/ps/cromdata",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "YmZkNWEwNGExZjI1YzY3ZmI5NWRkZGY2OTdlYjhiNGY4YzQ2MDYyMWE5NzEzNjMwOTE2MWIxZjFhOGNiOWM0ZGIzN2JiNmI3M2FiNWY2MTQ5OTY4MjkxMWQyMzJlNmI5YmViZTJhYTMyNjE2NmI0MDkyZTAxYTAyYWYyZjgwMmE=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1620925625516,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true
+  }
+}
