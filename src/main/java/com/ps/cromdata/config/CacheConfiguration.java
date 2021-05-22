@@ -48,6 +48,9 @@ public class CacheConfiguration {
             createCache(cm, com.ps.cromdata.domain.User.class.getName());
             createCache(cm, com.ps.cromdata.domain.Authority.class.getName());
             createCache(cm, com.ps.cromdata.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.ps.cromdata.domain.CronConfig.class.getName());
+            createCache(cm, com.ps.cromdata.domain.CronParameter.class.getName());
+            createCache(cm, com.ps.cromdata.domain.TargetInstances.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

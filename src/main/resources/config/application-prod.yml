@@ -33,9 +33,9 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/CronDataBackend
-    username: CronDataBackend
-    password:
+    url: ${SPRING_DATASOURCE_URL}
+    username: postgres
+    password: ${DB_PASS}
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -89,6 +89,13 @@ jhipster:
   http:
     cache: # Used by the CachingHttpHeadersFilter
       timeToLiveInDays: 1461
+  cors:
+    allowed-origins: '*'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'X-crondataApp-code,X-crondataApp-error,Origin,X-Requested-With,Content-Type,Accept,x-auth-token,Authorization,Link,X-Total-Count'
+    allow-credentials: true
+    max-age: 1800
   cache: # Cache configuration
     ehcache: # Ehcache configuration
       time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
