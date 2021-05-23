@@ -6,7 +6,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    
+
     <!--
         Added the entity CronParameter.
     -->
@@ -50,19 +50,5 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20210518085634-1-data" author="jhipster" context="faker">
-        <loadData
-                  file="config/liquibase/fake-data/cron_parameter.csv"
-                  separator=";"
-                  tableName="cron_parameter">
-            <column name="id" type="numeric"/>
-            <column name="param_short" type="string"/>
-            <column name="param_long" type="string"/>
-            <column name="config_id" type="numeric"/>
-            <column name="param_type" type="string"/>
-            <column name="param_description" type="string"/>
-            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
-        </loadData>
-    </changeSet>
 
 </databaseChangeLog>

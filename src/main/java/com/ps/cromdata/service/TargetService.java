@@ -29,20 +29,20 @@ public class TargetService {
     public void generatePromConfig() {
         try {
             List<TargetInstances> targets = targetInstancesRepository.findAll();
-            System.out.println(targets);
             Map<String, List<TargetInstances>> grouped =
                 targets.stream().collect(Collectors.groupingBy(TargetInstances::getJob));
             JSONArray jsonArray = new JSONArray();
             for (Map.Entry<String, List<TargetInstances>> entry : grouped.entrySet()) {
                 jsonArray.add(this.buildJson(entry.getKey(), entry.getValue()));
             }
-            String path = System.getenv("PROMETHEUS_TARGET_CONFIG_PATH")+"\\cron_targets.json";
-            File file = new File(path);
+            String path = System.getenv("PROMETHEUS_TARGET_CONFIG_PATH");
+            File file = new File(path, "cron_targets.json");
             file.getParentFile().mkdirs();
             file.createNewFile();
             try (FileWriter fileWriter = new FileWriter(path, false)) {
                 fileWriter.write(jsonArray.toJSONString());
                 fileWriter.flush();
+                System.out.println("************************ TARGET CREATED ******************");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -56,7 +56,8 @@ public class TargetService {
     public JSONObject buildJson(String job, List<TargetInstances> targetInstances) throws IOException {
         JSONObject obj = new JSONObject();
         JSONObject jobJson = new JSONObject();
-        List<String> targets = targetInstances.stream().map(TargetInstances::getTargetHost).collect(Collectors.toList());
+        List<String> targets = targetInstances.stream()
+            .map(TargetInstances -> TargetInstances.getTargetHost() + ":" + TargetInstances.getPort().toString()).collect(Collectors.toList());
         obj.put("targets", targets);
         jobJson.put("job", job);
         obj.put("labels", jobJson);

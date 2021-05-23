@@ -28,6 +28,10 @@ public class TargetInstances implements Serializable {
     private String targetHost;
 
     @NotNull
+    @Column(name = "port", nullable = false)
+    private Integer port;
+
+    @NotNull
     @Column(name = "job", nullable = false)
     private String job;
 
@@ -62,6 +66,19 @@ public class TargetInstances implements Serializable {
 
     public TargetInstances job(String job) {
         this.job = job;
+        return this;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public TargetInstances port(Integer port) {
+        this.port = port;
         return this;
     }
 
