@@ -7,9 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,20 +33,19 @@ public class TargetService {
             for (Map.Entry<String, List<TargetInstances>> entry : grouped.entrySet()) {
                 jsonArray.add(this.buildJson(entry.getKey(), entry.getValue()));
             }
-            String path = System.getenv("PROMETHEUS_TARGET_CONFIG_PATH");
-            File file = new File(path, "cron_targets.json");
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            try (FileWriter fileWriter = new FileWriter(path, false)) {
-                fileWriter.write(jsonArray.toJSONString());
-                fileWriter.flush();
+            System.out.println("************************ TARGET CREATING ******************");
+            try {
+                Writer output = null;
+                File file = new File("/etc/prometheus/targets/cron_targets.json");
+                output = new BufferedWriter(new FileWriter(file));
+                output.write(jsonArray.toJSONString());
+                output.close();
                 System.out.println("************************ TARGET CREATED ******************");
-
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (Exception ignored) {
-
+            ignored.printStackTrace();
         }
     }
 
