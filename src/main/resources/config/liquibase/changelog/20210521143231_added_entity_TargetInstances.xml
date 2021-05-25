@@ -13,19 +13,35 @@
     <changeSet id="20210521143231-1" author="jhipster">
         <createTable tableName="target_instances">
             <column name="id" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="target_host" type="varchar(255)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_target_instances_target_host" />
+                <constraints nullable="false"/>
+            </column>
+            <column name="port" type="integer">
+                <constraints nullable="false"/>
             </column>
             <column name="job" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
-            <column name="zone" type="varchar(255)">
-                <constraints nullable="true" />
+            <column name="description" type="varchar(500)">
+                <constraints nullable="true"/>
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <addUniqueConstraint tableName="target_instances"
+                             columnNames="target_host,port,job"
+                             constraintName="uk_target_instances"/>
+        <loadData
+            file="config/liquibase/data/targets.csv"
+            separator=";"
+            tableName="target_instances">
+            <column name="id" type="numeric"/>
+            <column name="target_host" type="string"/>
+            <column name="port" type="numeric"/>
+            <column name="job" type="string"/>
+            <column name="description" type="string"/>
+        </loadData>
     </changeSet>
 
     <changeSet id="20210521143231-1-relations" author="jhipster">

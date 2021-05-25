@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -35,8 +36,8 @@ public class TargetInstancesResourceIT {
     private static final String DEFAULT_JOB = "AAAAAAAAAA";
     private static final String UPDATED_JOB = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ZONE = "AAAAAAAAAA";
-    private static final String UPDATED_ZONE = "BBBBBBBBBB";
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     @Autowired
     private TargetInstancesRepository targetInstancesRepository;
@@ -51,7 +52,7 @@ public class TargetInstancesResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -59,12 +60,13 @@ public class TargetInstancesResourceIT {
         TargetInstances targetInstances = new TargetInstances()
             .target_host(DEFAULT_TARGET_HOST)
             .job(DEFAULT_JOB)
-            .zone(DEFAULT_ZONE);
+            .description(DEFAULT_DESCRIPTION);
         return targetInstances;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -72,7 +74,7 @@ public class TargetInstancesResourceIT {
         TargetInstances targetInstances = new TargetInstances()
             .target_host(UPDATED_TARGET_HOST)
             .job(UPDATED_JOB)
-            .zone(UPDATED_ZONE);
+            .description(UPDATED_DESCRIPTION);
         return targetInstances;
     }
 
@@ -97,7 +99,7 @@ public class TargetInstancesResourceIT {
         TargetInstances testTargetInstances = targetInstancesList.get(targetInstancesList.size() - 1);
         assertThat(testTargetInstances.getTargetHost()).isEqualTo(DEFAULT_TARGET_HOST);
         assertThat(testTargetInstances.getJob()).isEqualTo(DEFAULT_JOB);
-        assertThat(testTargetInstances.getZone()).isEqualTo(DEFAULT_ZONE);
+        assertThat(testTargetInstances.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -171,7 +173,7 @@ public class TargetInstancesResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(targetInstances.getId().intValue())))
             .andExpect(jsonPath("$.[*].target_host").value(hasItem(DEFAULT_TARGET_HOST)))
             .andExpect(jsonPath("$.[*].job").value(hasItem(DEFAULT_JOB)))
-            .andExpect(jsonPath("$.[*].zone").value(hasItem(DEFAULT_ZONE)));
+            .andExpect(jsonPath("$.[*].zone").value(hasItem(DEFAULT_DESCRIPTION)));
     }
 
     @Test
@@ -187,8 +189,9 @@ public class TargetInstancesResourceIT {
             .andExpect(jsonPath("$.id").value(targetInstances.getId().intValue()))
             .andExpect(jsonPath("$.target_host").value(DEFAULT_TARGET_HOST))
             .andExpect(jsonPath("$.job").value(DEFAULT_JOB))
-            .andExpect(jsonPath("$.zone").value(DEFAULT_ZONE));
+            .andExpect(jsonPath("$.zone").value(DEFAULT_DESCRIPTION));
     }
+
     @Test
     @Transactional
     public void getNonExistingTargetInstances() throws Exception {
@@ -212,7 +215,7 @@ public class TargetInstancesResourceIT {
         updatedTargetInstances
             .target_host(UPDATED_TARGET_HOST)
             .job(UPDATED_JOB)
-            .zone(UPDATED_ZONE);
+            .description(UPDATED_DESCRIPTION);
 
         restTargetInstancesMockMvc.perform(put("/api/target-instances")
             .contentType(MediaType.APPLICATION_JSON)
@@ -225,7 +228,7 @@ public class TargetInstancesResourceIT {
         TargetInstances testTargetInstances = targetInstancesList.get(targetInstancesList.size() - 1);
         assertThat(testTargetInstances.getTargetHost()).isEqualTo(UPDATED_TARGET_HOST);
         assertThat(testTargetInstances.getJob()).isEqualTo(UPDATED_JOB);
-        assertThat(testTargetInstances.getZone()).isEqualTo(UPDATED_ZONE);
+        assertThat(testTargetInstances.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test
