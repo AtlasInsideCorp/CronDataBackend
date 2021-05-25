@@ -4,11 +4,13 @@ import com.ps.cromdata.domain.TargetInstances;
 import com.ps.cromdata.repository.TargetInstancesRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,7 +66,9 @@ public class TargetService {
 
     public void insertDefaultValues() {
         String hostname = System.getenv("CRONDATA_SERVER_HOST");
-        List<Target> targets = null;
+        if (hostname == null)
+            hostname = "localhost";
+        List<Target> targets = new ArrayList<>();
         targets.add(new Target(hostname,
             9001, "cadvisor",
             "Container Advisor provides container users an understanding of the resource usage and" +
@@ -75,7 +79,15 @@ public class TargetService {
         targets.add(new Target(hostname,
             9093, "alert-manager",
             "The Alert Manager handles alerts sent by client applications such as the Prometheus server."));
-        targetInstancesRepository.saveAll(targets);
+//        this.targetInstancesRepository.saveAll(targets);
+        for (Target t : targets) {
+            TargetInstances target = new TargetInstances();
+            target.setTargetHost(t.getTargetHost());
+            target.setJob(t.getJob());
+            target.setPort(t.getPort());
+            target.setDescription(t.getDescription());
+            targetInstancesRepository.save(target);
+        }
     }
 
     @PostConstruct
@@ -85,7 +97,7 @@ public class TargetService {
     }
 }
 
-class Target extends TargetInstances {
+class Target {
 
     private String targetHost;
     private Integer port;
