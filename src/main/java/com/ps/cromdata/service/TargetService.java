@@ -31,10 +31,9 @@ public class TargetService {
             Map<String, List<TargetInstances>> grouped =
                 targets.stream().collect(Collectors.groupingBy(TargetInstances::getJob));
             JSONArray jsonArray = new JSONArray();
-            for (TargetInstances targetInstances : targets) {
-                jsonArray.add(this.buildJson(targetInstances));
+            for (Map.Entry<String, List<TargetInstances>> entry : grouped.entrySet()) {
+                jsonArray.add(this.buildJson(entry.getKey(), entry.getValue()));
             }
-
             System.out.println("************************ TARGET CREATING ******************");
             try {
                 Writer output = null;
@@ -52,21 +51,85 @@ public class TargetService {
     }
 
 
-    public JSONObject buildJson(TargetInstances targetInstances) throws IOException {
+    public JSONObject buildJson(String job, List<TargetInstances> targetInstances) throws IOException {
         JSONObject obj = new JSONObject();
         JSONObject jobJson = new JSONObject();
-        JSONArray arrayTarget = new JSONArray();
-        arrayTarget.add(targetInstances.getTargetHost() + ":" + targetInstances.getPort().toString());
-        obj.put("targets", arrayTarget);
-        jobJson.put("job", targetInstances.getJob());
+        List<String> targets = targetInstances.stream()
+            .map(TargetInstances -> TargetInstances.getTargetHost() + ":" + TargetInstances.getPort().toString()).collect(Collectors.toList());
+        obj.put("targets", targets);
+        jobJson.put("job", job);
         obj.put("labels", jobJson);
         return obj;
     }
 
+    public void insertDefaultValues() {
+        String hostname = System.getenv("CRONDATA_SERVER_HOST");
+        List<Target> targets = null;
+        targets.add(new Target(hostname,
+            9001, "cadvisor",
+            "Container Advisor provides container users an understanding of the resource usage and" +
+                " performance characteristics of their running containers."));
+        targets.add(new Target(hostname,
+            9100, "node-exporter",
+            "Node Exporter exposes a wide variety of hardware- and kernel-related metrics"));
+        targets.add(new Target(hostname,
+            9093, "alert-manager",
+            "The Alert Manager handles alerts sent by client applications such as the Prometheus server."));
+        targetInstancesRepository.saveAll(targets);
+    }
+
     @PostConstruct
     public void init() {
+        this.insertDefaultValues();
         this.generatePromConfig();
     }
 }
 
+class Target extends TargetInstances {
 
+    private String targetHost;
+    private Integer port;
+    private String job;
+    private String description;
+
+    public Target(String targetHost, Integer port, String job, String description) {
+
+        this.targetHost = targetHost;
+        this.port = port;
+        this.job = job;
+        this.description = description;
+    }
+
+
+    public String getTargetHost() {
+        return targetHost;
+    }
+
+    public void setTargetHost(String targetHost) {
+        this.targetHost = targetHost;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}

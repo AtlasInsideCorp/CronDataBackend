@@ -32,16 +32,6 @@
         <addUniqueConstraint tableName="target_instances"
                              columnNames="target_host,port,job"
                              constraintName="uk_target_instances"/>
-        <loadData
-            file="config/liquibase/data/targets.csv"
-            separator=";"
-            tableName="target_instances">
-            <column name="id" type="numeric"/>
-            <column name="target_host" type="string"/>
-            <column name="port" type="numeric"/>
-            <column name="job" type="string"/>
-            <column name="description" type="string"/>
-        </loadData>
     </changeSet>
 
     <changeSet id="20210521143231-1-relations" author="jhipster">
