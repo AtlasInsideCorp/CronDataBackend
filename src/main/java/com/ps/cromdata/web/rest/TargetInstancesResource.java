@@ -106,6 +106,18 @@ public class TargetInstancesResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+//    @GetMapping("/target-instances/valid")
+//    public ResponseEntity<List<TargetInstances>> checkTarget(@PathVariable String target,
+//                                                             @PathVariable String job,
+//                                                             @PathVariable Integer port) {
+//        log.debug("REST request to get a page of TargetInstances");
+//
+////        Page<TargetInstances> page = targetInstancesRepository.findAll(pageable);
+////        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+//        return ResponseEntity.ok();
+//    }
+
+
     /**
      * {@code GET  /target-instances/:id} : get the "id" targetInstances.
      *

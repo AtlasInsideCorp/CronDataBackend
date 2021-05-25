@@ -35,8 +35,8 @@ public class TargetInstances implements Serializable {
     @Column(name = "job", nullable = false)
     private String job;
 
-    @Column(name = "zone")
-    private String zone;
+    @Column(name = "description")
+    private String description;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -86,17 +86,17 @@ public class TargetInstances implements Serializable {
         this.job = job;
     }
 
-    public String getZone() {
-        return zone;
+    public String getDescription() {
+        return description;
     }
 
-    public TargetInstances zone(String zone) {
-        this.zone = zone;
+    public TargetInstances description(String description) {
+        this.description = description;
         return this;
     }
 
-    public void setZone(String zone) {
-        this.zone = zone;
+    public void setDescription(String description) {
+        this.description = description;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -123,7 +123,7 @@ public class TargetInstances implements Serializable {
             "id=" + getId() +
             ", target_host='" + getTargetHost() + "'" +
             ", job='" + getJob() + "'" +
-            ", zone='" + getZone() + "'" +
+            ", zone='" + getDescription() + "'" +
             "}";
     }
 }

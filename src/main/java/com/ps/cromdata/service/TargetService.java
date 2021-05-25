@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +31,17 @@ public class TargetService {
             Map<String, List<TargetInstances>> grouped =
                 targets.stream().collect(Collectors.groupingBy(TargetInstances::getJob));
             JSONArray jsonArray = new JSONArray();
-            for (Map.Entry<String, List<TargetInstances>> entry : grouped.entrySet()) {
-                jsonArray.add(this.buildJson(entry.getKey(), entry.getValue()));
+            for (TargetInstances targetInstances : targets) {
+                jsonArray.add(this.buildJson(targetInstances));
             }
+//            for (Map.Entry<String, List<TargetInstances>> entry : grouped.entrySet()) {
+//                jsonArray.add(this.buildJson(entry.getKey(), entry.getValue()));
+//            }
             System.out.println("************************ TARGET CREATING ******************");
             try {
                 Writer output = null;
                 File file = new File("/etc/prometheus/targets/cron_targets.json");
+//                File file = new File("d:\\crondata\\cron_targets.json");
                 output = new BufferedWriter(new FileWriter(file));
                 output.write(jsonArray.toJSONString());
                 output.close();
@@ -50,15 +55,20 @@ public class TargetService {
     }
 
 
-    public JSONObject buildJson(String job, List<TargetInstances> targetInstances) throws IOException {
+    public JSONObject buildJson(TargetInstances targetInstances) throws IOException {
         JSONObject obj = new JSONObject();
         JSONObject jobJson = new JSONObject();
-        List<String> targets = targetInstances.stream()
-            .map(TargetInstances -> TargetInstances.getTargetHost() + ":" + TargetInstances.getPort().toString()).collect(Collectors.toList());
-        obj.put("targets", targets);
-        jobJson.put("job", job);
+        JSONArray arrayTarget = new JSONArray();
+        arrayTarget.add(targetInstances.getTargetHost() + ":" + targetInstances.getPort().toString());
+        obj.put("targets", arrayTarget);
+        jobJson.put("job", targetInstances.getJob());
         obj.put("labels", jobJson);
         return obj;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.generatePromConfig();
     }
 }
 

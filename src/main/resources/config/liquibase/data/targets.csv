@@ -1,0 +1,5 @@
+id;target_host;port;job;description
+1;node-exporter;9100;node-exporter;Node Exporter exposes a wide variety of hardware- and kernel-related metrics
+2;cadvisor;9001;cadvisor;Container Advisor provides container users an understanding of the resource usage and performance characteristics of their running containers.
+3;alert-manager;9093;alert-manager;The Alert Manager handles alerts sent by client applications such as the Prometheus server.
+
