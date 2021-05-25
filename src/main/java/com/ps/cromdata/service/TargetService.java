@@ -34,14 +34,11 @@ public class TargetService {
             for (TargetInstances targetInstances : targets) {
                 jsonArray.add(this.buildJson(targetInstances));
             }
-//            for (Map.Entry<String, List<TargetInstances>> entry : grouped.entrySet()) {
-//                jsonArray.add(this.buildJson(entry.getKey(), entry.getValue()));
-//            }
+
             System.out.println("************************ TARGET CREATING ******************");
             try {
                 Writer output = null;
                 File file = new File("/etc/prometheus/targets/cron_targets.json");
-//                File file = new File("d:\\crondata\\cron_targets.json");
                 output = new BufferedWriter(new FileWriter(file));
                 output.write(jsonArray.toJSONString());
                 output.close();
