@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface TargetsRepository extends JpaRepository<Targets, Long>, JpaSpecificationExecutor<Targets> {
+
 }

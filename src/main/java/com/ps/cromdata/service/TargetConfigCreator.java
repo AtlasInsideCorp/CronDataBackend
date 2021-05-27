@@ -1,9 +1,10 @@
-package com.ps.cromdata.repository;
+package com.ps.cromdata.service;
 
 import com.ps.cromdata.domain.Targets;
+import com.ps.cromdata.repository.TargetsRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -11,13 +12,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Repository
-public abstract class CustomTargetRepository {
+@Component
+public class TargetConfigCreator {
+
     private final TargetsRepository targetsRepository;
 
-    public CustomTargetRepository(TargetsRepository targetsRepository) {
+    public TargetConfigCreator(TargetsRepository targetsRepository) {
         this.targetsRepository = targetsRepository;
     }
+
+    @PostConstruct
+    public void init() {
+        this.insertDefaultValues();
+        this.generatePromConfig();
+    }
+
 
     public void generatePromConfig() {
         try {
@@ -44,7 +53,6 @@ public abstract class CustomTargetRepository {
         }
     }
 
-
     public JSONObject buildJson(String job, List<Targets> targetInstances) throws IOException {
         JSONObject obj = new JSONObject();
         JSONObject jobJson = new JSONObject();
@@ -58,19 +66,23 @@ public abstract class CustomTargetRepository {
 
     public void insertDefaultValues() {
         if (!targetsRepository.findById(1L).isPresent()) {
+            System.out.println("************************** INIT DEFAULT TARGETS IN DATABASE ************************** ");
             String hostname = System.getenv("CRONDATA_SERVER_HOST");
             Targets cadvisor = new Targets();
+            cadvisor.setId(1L);
             cadvisor.setHost(hostname);
             cadvisor.setPort(9001);
             cadvisor.setJob("cadvisor");
             cadvisor.setDescription("Container Advisor provides container users an understanding of the resource usage and" +
                 " performance characteristics of their running containers.");
             Targets nodeExporter = new Targets();
+            nodeExporter.setId(2L);
             nodeExporter.setHost(hostname);
             nodeExporter.setPort(9100);
             nodeExporter.setJob("node-exporter");
             nodeExporter.setDescription("Node Exporter exposes a wide variety of hardware- and kernel-related metrics.");
             Targets alertManager = new Targets();
+            alertManager.setId(3L);
             alertManager.setHost(hostname);
             alertManager.setPort(9093);
             alertManager.setJob("alert-manager");
@@ -82,9 +94,4 @@ public abstract class CustomTargetRepository {
         }
     }
 
-    @PostConstruct
-    public void init() {
-        this.insertDefaultValues();
-        this.generatePromConfig();
-    }
 }

@@ -1,8 +1,9 @@
 package com.ps.cromdata.service;
 
 import com.ps.cromdata.domain.Targets;
-import com.ps.cromdata.repository.CustomTargetRepository;
 import com.ps.cromdata.repository.TargetsRepository;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import java.io.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Targets}.
@@ -23,9 +29,11 @@ public class TargetsService {
     private final Logger log = LoggerFactory.getLogger(TargetsService.class);
 
     private final TargetsRepository targetsRepository;
+    private final TargetConfigCreator targetConfigCreator;
 
-    public TargetsService(TargetsRepository targetsRepository) {
+    public TargetsService(TargetsRepository targetsRepository, TargetConfigCreator targetConfigCreator) {
         this.targetsRepository = targetsRepository;
+        this.targetConfigCreator = targetConfigCreator;
     }
 
     /**
@@ -36,7 +44,9 @@ public class TargetsService {
      */
     public Targets save(Targets targets) {
         log.debug("Request to save Targets : {}", targets);
-        return targetsRepository.save(targets);
+        Targets result = targetsRepository.save(targets);
+        this.targetConfigCreator.generatePromConfig();
+        return result;
     }
 
     /**
@@ -72,5 +82,8 @@ public class TargetsService {
     public void delete(Long id) {
         log.debug("Request to delete Targets : {}", id);
         targetsRepository.deleteById(id);
+        this.targetConfigCreator.generatePromConfig();
     }
+
+
 }
