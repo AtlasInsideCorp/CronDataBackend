@@ -5,11 +5,9 @@ import java.time.Duration;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
 
-import org.hibernate.cache.jcache.ConfigSettings;
 import io.github.jhipster.config.JHipsterProperties;
 
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -35,22 +33,12 @@ public class CacheConfiguration {
                 .build());
     }
 
-    @Bean
-    public HibernatePropertiesCustomizer hibernatePropertiesCustomizer(javax.cache.CacheManager cacheManager) {
-        return hibernateProperties -> hibernateProperties.put(ConfigSettings.CACHE_MANAGER, cacheManager);
-    }
 
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
             createCache(cm, com.ps.cromdata.repository.UserRepository.USERS_BY_LOGIN_CACHE);
             createCache(cm, com.ps.cromdata.repository.UserRepository.USERS_BY_EMAIL_CACHE);
-            createCache(cm, com.ps.cromdata.domain.User.class.getName());
-            createCache(cm, com.ps.cromdata.domain.Authority.class.getName());
-            createCache(cm, com.ps.cromdata.domain.User.class.getName() + ".authorities");
-            createCache(cm, com.ps.cromdata.domain.CronConfig.class.getName());
-            createCache(cm, com.ps.cromdata.domain.CronParameter.class.getName());
-            createCache(cm, com.ps.cromdata.domain.TargetInstances.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

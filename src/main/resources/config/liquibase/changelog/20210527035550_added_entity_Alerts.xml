@@ -8,33 +8,40 @@
 
 
     <!--
-        Added the entity TargetInstances.
+        Added the entity Alerts.
     -->
-    <changeSet id="20210521143231-1" author="jhipster">
-        <createTable tableName="target_instances">
+    <changeSet id="20210527035550-1" author="jhipster">
+        <createTable tableName="alerts">
             <column name="id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="target_host" type="varchar(255)">
-                <constraints nullable="false"/>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
-            <column name="port" type="integer">
-                <constraints nullable="false"/>
+            <column name="summary" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
-            <column name="job" type="varchar(255)">
-                <constraints nullable="false"/>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
-            <column name="description" type="varchar(500)">
-                <constraints nullable="true"/>
+            <column name="severity" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="readed" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="received_at" type="datetime">
+                <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <addUniqueConstraint tableName="target_instances"
-                             columnNames="target_host,port,job"
-                             constraintName="uk_target_instances"/>
+        <dropDefaultValue tableName="alerts" columnName="received_at" columnDataType="datetime"/>
     </changeSet>
 
-    <changeSet id="20210521143231-1-relations" author="jhipster">
+    <changeSet id="20210527035550-1-relations" author="jhipster">
 
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

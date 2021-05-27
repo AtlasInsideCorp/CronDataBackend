@@ -1,7 +1,5 @@
 package com.ps.cromdata.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -9,12 +7,11 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 
 /**
- * A TargetInstances.
+ * A Targets.
  */
 @Entity
-@Table(name = "target_instances")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class TargetInstances implements Serializable {
+@Table(name = "targets")
+public class Targets implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,8 +21,8 @@ public class TargetInstances implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "target_host", nullable = false, unique = true)
-    private String targetHost;
+    @Column(name = "host", nullable = false)
+    private String host;
 
     @NotNull
     @Column(name = "port", nullable = false)
@@ -47,38 +44,38 @@ public class TargetInstances implements Serializable {
         this.id = id;
     }
 
-    public String getTargetHost() {
-        return targetHost;
+    public String getHost() {
+        return host;
     }
 
-    public TargetInstances target_host(String target_host) {
-        this.targetHost = target_host;
+    public Targets host(String host) {
+        this.host = host;
         return this;
     }
 
-    public void setTargetHost(String target_host) {
-        this.targetHost = target_host;
-    }
-
-    public String getJob() {
-        return job;
-    }
-
-    public TargetInstances job(String job) {
-        this.job = job;
-        return this;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public Integer getPort() {
         return port;
     }
 
+    public Targets port(Integer port) {
+        this.port = port;
+        return this;
+    }
+
     public void setPort(Integer port) {
         this.port = port;
     }
 
-    public TargetInstances port(Integer port) {
-        this.port = port;
+    public String getJob() {
+        return job;
+    }
+
+    public Targets job(String job) {
+        this.job = job;
         return this;
     }
 
@@ -90,7 +87,7 @@ public class TargetInstances implements Serializable {
         return description;
     }
 
-    public TargetInstances description(String description) {
+    public Targets description(String description) {
         this.description = description;
         return this;
     }
@@ -105,10 +102,10 @@ public class TargetInstances implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof TargetInstances)) {
+        if (!(o instanceof Targets)) {
             return false;
         }
-        return id != null && id.equals(((TargetInstances) o).id);
+        return id != null && id.equals(((Targets) o).id);
     }
 
     @Override
@@ -119,11 +116,12 @@ public class TargetInstances implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "TargetInstances{" +
+        return "Targets{" +
             "id=" + getId() +
-            ", target_host='" + getTargetHost() + "'" +
+            ", host='" + getHost() + "'" +
+            ", port=" + getPort() +
             ", job='" + getJob() + "'" +
-            ", zone='" + getDescription() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }
