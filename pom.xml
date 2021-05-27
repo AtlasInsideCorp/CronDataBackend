@@ -6,7 +6,7 @@
     <groupId>com.ps.cromdata</groupId>
     <artifactId>cron-data-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>Cron Data Backend</name>
 
     <repositories>
