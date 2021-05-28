@@ -65,7 +65,7 @@ public class TargetConfigCreator {
     }
 
     public void insertDefaultValues() {
-        if (!targetsRepository.findById(1L).isPresent()) {
+        if (targetsRepository.findAll().isEmpty()) {
             System.out.println("************************** INIT DEFAULT TARGETS IN DATABASE ************************** ");
             String hostname = System.getenv("CRONDATA_SERVER_HOST");
             Targets cadvisor = new Targets();
