@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
-    <head>
-        <title th:text="#{email.activation.title}">JHipster activation</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link rel="icon" th:href="@{|${baseUrl}/favicon.ico|}" />
-    </head>
-    <body>
-        <p th:text="#{email.activation.greeting(${user.login})}">
-            Dear
-        </p>
-        <p th:text="#{email.activation.text1}">
-            Your JHipster account has been created, please click on the URL below to activate it:
-        </p>
-        <p>
-            <a th:with="url=(@{|${baseUrl}/account/activate?key=${user.activationKey}|})" th:href="${url}"
-            th:text="${url}">Activation link</a>
-        </p>
-        <p>
-            <span th:text="#{email.activation.text2}">Regards, </span>
-            <br/>
-            <em th:text="#{email.signature}">JHipster.</em>
-        </p>
-    </body>
+<head>
+    <title th:text="#{email.activation.title}">JHipster activation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="icon" th:href="@{|${baseUrl}/favicon.ico|}"/>
+</head>
+<body>
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
+    <tr>
+        <td align="center" bgcolor="#1e1e2d" style="padding: 40px 0 30px 0;">
+            <h2 style="color: white">CRONDATA</h2>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="" style="padding: 40px 30px 40px 30px;">
+            <p th:text="#{email.activation.greeting(${user.login})}">
+                Dear
+            </p>
+            <p>
+                Your account has been created, please click on the URL below to activate it:
+            </p>
+            <p>
+                <a th:with="url=(@{|${baseUrl}/account/activate?key=${user.activationKey}|})" th:href="${url}"
+                   th:text="${url}">Activation link</a>
+            </p>
+            <p>
+                <span th:text="#{email.activation.text2}">Regards, </span>
+                <br/>
+                <em th:text="#{email.signature}">JHipster.</em>
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#1e1e2d" style="padding: 30px 30px 30px 30px;">
+        </td>
+    </tr>
+</table>
+</body>
 </html>

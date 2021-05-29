@@ -23,25 +23,14 @@
     <tr>
         <td align="center" bgcolor="#1e1e2d" style="padding: 40px 0 30px 0;">
             <h2 style="color: white">CRONDATA</h2>
-            <!--            <img src="cid:logo" alt="CronData" style="display: block;"/>-->
         </td>
     </tr>
     <tr>
         <td bgcolor="" style="padding: 40px 30px 40px 30px;">
-            <p th:text="#{email.activation.greeting(${user.login})}">
-                Dear
-            </p>
-            <p>
-                Your account has been created, please click on the URL below to access it:
-            </p>
-            <p>
-                <a th:with="url=(@{|${baseUrl}/account/reset/finish?key=${user.resetKey}|})" th:href="${url}"
-                   th:text="${url}">Login link</a>
-            </p>
-            <p>
-                <span>Regards, </span>
-                <br/>
-            </p>
+            <p><b>Summary: </b>${summary}</p>
+            <p><b>Severity: ${severity} </b></p>
+            <p><b>Description: </b>${description}</p>
+            <p><b>Date: ${date} </b></p>
         </td>
     </tr>
     <tr>
@@ -52,4 +41,3 @@
 
 </body>
 </html>
-

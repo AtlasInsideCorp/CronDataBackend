@@ -1,7 +1,6 @@
 package com.ps.cromdata.repository;
 
 import com.ps.cromdata.domain.Authority;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

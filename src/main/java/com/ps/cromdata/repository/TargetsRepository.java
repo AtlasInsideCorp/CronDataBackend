@@ -1,8 +1,8 @@
 package com.ps.cromdata.repository;
 
 import com.ps.cromdata.domain.Targets;
-
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**

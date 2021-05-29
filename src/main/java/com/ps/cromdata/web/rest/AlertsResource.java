@@ -2,6 +2,7 @@ package com.ps.cromdata.web.rest;
 
 import com.ps.cromdata.domain.Alerts;
 import com.ps.cromdata.service.AlertsService;
+import com.ps.cromdata.service.MailService;
 import com.ps.cromdata.service.dto.Alert;
 import com.ps.cromdata.service.dto.AlertManager;
 import com.ps.cromdata.web.rest.errors.BadRequestAlertException;
@@ -57,8 +58,13 @@ public class AlertsResource {
 
     private final AlertsQueryService alertsQueryService;
 
-    public AlertsResource(AlertsService alertsService, AlertsQueryService alertsQueryService) {
+    private final MailService mailService;
+
+    public AlertsResource(AlertsService alertsService,
+                          MailService mailService,
+                          AlertsQueryService alertsQueryService) {
         this.alertsService = alertsService;
+        this.mailService = mailService;
         this.alertsQueryService = alertsQueryService;
     }
 
@@ -91,6 +97,7 @@ public class AlertsResource {
             alerts.setSeverity(alert.getLabels().get("severity"));
             alerts.setStatus(alert.getStatus());
             alertsService.save(alerts);
+            mailService.sendAlertEmail(alerts);
         }
         return ResponseEntity.ok().body("OK");
     }
