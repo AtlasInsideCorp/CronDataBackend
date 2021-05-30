@@ -37,8 +37,8 @@ public class ReadDatabasePropertiesPostProcessor implements EnvironmentPostProce
             "  \"description\" varchar(255),\n" +
             "  PRIMARY KEY (\"id\")\n" +
             ");\n" +
-            "INSERT INTO \"public\".\"utm_configuration_section\" VALUES (1, 'Alert notifications', 'Configure Crondata email list sender') ON CONFLICT(id) DO NOTHING;\n" +
-            "INSERT INTO \"public\".\"utm_configuration_section\" VALUES (2, 'email settings', 'Here you can configure all necessary parameters for email notifications') ON CONFLICT(id) DO NOTHING;";
+            "INSERT INTO \"public\".\"utm_configuration_section\" VALUES (1, 'Email settings', 'Configure Crondata email list sender') ON CONFLICT(id) DO NOTHING;\n" +
+            "INSERT INTO \"public\".\"utm_configuration_section\" VALUES (2, 'Alert notifications', 'Here you can configure all necessary parameters for email notifications') ON CONFLICT(id) DO NOTHING;";
 
     private static final String CREATE_UTM_CONFIGURATION_PARAMETER_SCRIPT =
         "CREATE TABLE IF NOT EXISTS \"public\".\"utm_configuration_parameter\" (\n" +

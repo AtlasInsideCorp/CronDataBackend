@@ -1,0 +1,51 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "module_param",
+      "otherEntityName": "moduleConfig",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "moduleShort",
+      "otherEntityRelationshipName": "moduleConfigParameter"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "module",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "paramShort",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "paramLarge",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "paramValue",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "paramType",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "paramRegex",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20210528190122",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "module_config_parameter",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

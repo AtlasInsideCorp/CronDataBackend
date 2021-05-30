@@ -1,0 +1,7 @@
+id;module;param_short;param_large;param_value;param_type;param_regex
+1;email;mail.host;Hostname;;string;
+2;email;mail.port;Port;;number;
+3;email;mail.user;User;;string;
+4;email;mail.pass;Password;;password;
+5;alert;alert.email.list;Email list to send alerts;;texarea;
+
