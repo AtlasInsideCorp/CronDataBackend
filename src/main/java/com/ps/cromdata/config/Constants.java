@@ -36,6 +36,7 @@ public final class Constants {
     public static final String CONF_PARAM_PWD_TYPE_SECRET = "Cron.Pwd-53cr3t.5t4k!_3mpTy*";
     public static final String GRAFANA_URL = "http://localhost:3000";
     public static final String PROMETHEUS_URL = "http://prometheus:9090";
+    public static final String PROMETHEUS_PATH = "d:/tet/";
 
     private Constants() {
     }
