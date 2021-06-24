@@ -45,6 +45,9 @@ public class Applications implements Serializable {
     @Column(name = "is_installed")
     private Boolean isInstalled;
 
+    @Column(name = "uid")
+    private String uid;
+
 
     @ManyToOne
     @JsonIgnoreProperties(value = "applications", allowSetters = true)
@@ -147,6 +150,19 @@ public class Applications implements Serializable {
         return this;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public Applications uid(String uid) {
+        this.uid = uid;
+        return this;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public void setInstallationLink(String appIntall) {
         this.installationLink = appIntall;
     }
@@ -180,6 +196,7 @@ public class Applications implements Serializable {
     public int hashCode() {
         return 31;
     }
+
 
     // prettier-ignore
     @Override

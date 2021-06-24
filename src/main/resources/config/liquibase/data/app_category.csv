@@ -5,3 +5,4 @@ id;category_name;category_description
 4;API;API is the acronym for Application Programming Interface, which is a software intermediary that allows two applications to talk to each other.
 5;Monitoring;A system monitor is a hardware or software component used to monitor system resources and performance in a computer system.
 6;Miscellaneous;Miscellaneous exporters
+7;Hypervisors;Virtualization

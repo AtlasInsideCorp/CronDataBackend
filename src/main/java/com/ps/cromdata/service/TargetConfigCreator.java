@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.ps.cromdata.config.Constants.PROMETHEUS_PATH;
+
 @Component
 public class TargetConfigCreator {
 
@@ -40,7 +42,8 @@ public class TargetConfigCreator {
             System.out.println("************************ TARGET CREATING ******************");
             try {
                 Writer output = null;
-                File file = new File("/etc/prometheus/targets/cron_targets.json");
+                File file = new File(PROMETHEUS_PATH + "targets/cron_targets.json");
+                file.getParentFile().mkdirs();
                 output = new BufferedWriter(new FileWriter(file));
                 output.write(jsonArray.toJSONString());
                 output.close();

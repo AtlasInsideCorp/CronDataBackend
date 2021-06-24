@@ -1,11 +1,10 @@
 package com.ps.cromdata.web.rest;
 
-import com.appnexus.grafana.client.models.DashboardMeta;
 import com.ps.cromdata.domain.Applications;
 import com.ps.cromdata.service.ApplicationDashboardLoaderService;
+import com.ps.cromdata.service.ApplicationImportService;
 import com.ps.cromdata.service.ApplicationsQueryService;
 import com.ps.cromdata.service.ApplicationsService;
-import com.ps.cromdata.service.GrafanaDashboardService;
 import com.ps.cromdata.service.dto.ApplicationsCriteria;
 import com.ps.cromdata.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -24,17 +23,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.validation.Valid;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,16 +54,16 @@ public class ApplicationsResource {
 
     private final ApplicationDashboardLoaderService applicationDashboardLoaderService;
 
-    private final GrafanaDashboardService grafanaDashboardService;
+    private final ApplicationImportService applicationImportService;
 
     public ApplicationsResource(ApplicationsService applicationsService,
                                 ApplicationsQueryService applicationsQueryService,
-                                GrafanaDashboardService grafanaDashboardService,
+                                ApplicationImportService applicationImportService,
                                 ApplicationDashboardLoaderService applicationDashboardLoaderService) {
         this.applicationsService = applicationsService;
         this.applicationsQueryService = applicationsQueryService;
         this.applicationDashboardLoaderService = applicationDashboardLoaderService;
-        this.grafanaDashboardService = grafanaDashboardService;
+        this.applicationImportService = applicationImportService;
     }
 
     /**
@@ -93,25 +89,65 @@ public class ApplicationsResource {
     /**
      * {@code POST  /applications/activate} : Activate application.
      *
-     * @param applications the applications to create.
+     * @param applications the application to activate.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new applications, or with status {@code 400 (Bad Request)} if the applications has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/applications/activate")
-    public ResponseEntity<Applications> activateApplications(@Valid @RequestBody Applications applications) throws URISyntaxException, IOException, ParseException {
+    public ResponseEntity<Applications> activateApplications(@Valid @RequestBody Applications applications) throws URISyntaxException, IOException, ParseException, NoSuchFieldException {
         log.debug("REST request to update Applications : {}", applications);
         if (applications.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Resource[] dashboards = applicationDashboardLoaderService.loadResources("classpath*:" + applications.getAppPathResource() + "/dashboards/*.json");
-        JSONParser parser = new JSONParser();
-        for (Resource dashboard : dashboards) {
-            Object obj = parser.parse(new FileReader(dashboard.getFile().getPath()));
-            JSONObject jsonObject = (JSONObject) obj;
-            System.out.println(jsonObject.toJSONString());
-            grafanaDashboardService.saveDashboard(jsonObject);
+        String dashboardsLocation = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/dashboards");
+        if (Files.exists(Paths.get(dashboardsLocation))) {
+            Resource[] dashboards = applicationDashboardLoaderService.loadResources("classpath*:" + applications.getAppPathResource() + "/dashboards/*.json");
+            JSONParser parser = new JSONParser();
+            String uids = "";
+            for (Resource dashboard : dashboards) {
+                Object obj = parser.parse(new FileReader(dashboard.getFile().getPath()));
+                JSONObject jsonObject = (JSONObject) obj;
+                String response = applicationImportService.saveDashboard(jsonObject);
+                uids = String.join(",", uids, response);
+            }
+            if (uids.startsWith(","))
+                uids = uids.substring(1, uids.length());
+            applications.setUid(uids);
         }
+        String location = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/rules");
+        if (Files.exists(Paths.get(location)))
+            applicationImportService.copyDirectory(location);
         applications.setIsInstalled(true);
+        Applications result = applicationsService.save(applications);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, applications.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /applications/deactivate} : Deactivate application.
+     *
+     * @param applications the application to deactivate.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new applications, or with status {@code 400 (Bad Request)} if the applications has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/applications/deactivate")
+    public ResponseEntity<Applications> deactivateApplications(@Valid @RequestBody Applications applications) throws IOException, URISyntaxException {
+        log.debug("REST request to update Applications : {}", applications);
+        if (applications.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (applications.getUid() != null) {
+            String[] dashboards = applications.getUid().split(",");
+            for (String uid : dashboards) {
+                applicationImportService.deleteDashboard(uid);
+            }
+        }
+        String location = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/rules");
+        if (Files.exists(Paths.get(location)))
+            applicationImportService.deleteRules(location);
+        applications.setIsInstalled(false);
+        applications.setUid(null);
         Applications result = applicationsService.save(applications);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, applications.getId().toString()))
