@@ -60,12 +60,22 @@ public class TargetConfigCreator {
         JSONObject obj = new JSONObject();
         JSONObject jobJson = new JSONObject();
         List<String> targets = targetInstances.stream()
-            .map(TargetInstances -> TargetInstances.getHost() + ":" + TargetInstances.getPort().toString()).collect(Collectors.toList());
+            .map(this::buildTarget).collect(Collectors.toList());
         obj.put("targets", targets);
         jobJson.put("job", job);
         obj.put("labels", jobJson);
         return obj;
     }
+
+    private String buildTarget(Targets target) {
+        if (target.getPort() == null) {
+            return target.getHost();
+        } else {
+            return target.getHost() + ":" + target.getPort().toString();
+        }
+
+    }
+
 
     public void insertDefaultValues() {
         if (targetsRepository.findAll().isEmpty()) {

@@ -45,7 +45,7 @@ public class Applications implements Serializable {
     @Column(name = "is_installed")
     private Boolean isInstalled;
 
-    @Column(name = "uid")
+    @Column(name = "uuid")
     private String uid;
 
 
