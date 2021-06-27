@@ -19,7 +19,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="port" type="integer">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="job" type="varchar(255)">
                 <constraints nullable="false" />

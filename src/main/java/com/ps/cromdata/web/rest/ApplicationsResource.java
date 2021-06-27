@@ -115,8 +115,10 @@ public class ApplicationsResource {
             applications.setUid(uids);
         }
         String location = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/rules");
-        if (Files.exists(Paths.get(location)))
-            applicationImportService.copyDirectory(location);
+        if (location != null) {
+            if (Files.exists(Paths.get(location)))
+                applicationImportService.copyDirectory(location);
+        }
         applications.setIsInstalled(true);
         Applications result = applicationsService.save(applications);
         return ResponseEntity.ok()

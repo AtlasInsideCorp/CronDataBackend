@@ -3,6 +3,7 @@ package com.ps.cromdata.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.github.jhipster.service.Criteria;
+import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -36,6 +37,9 @@ public class ApplicationsCriteria implements Serializable, Criteria {
 
     private LongFilter appCategoryId;
 
+    private BooleanFilter isInstalled;
+
+
     public ApplicationsCriteria() {
     }
 
@@ -48,6 +52,7 @@ public class ApplicationsCriteria implements Serializable, Criteria {
         this.appPathResource = other.appPathResource == null ? null : other.appPathResource.copy();
         this.appIntall = other.appIntall == null ? null : other.appIntall.copy();
         this.appCategoryId = other.appCategoryId == null ? null : other.appCategoryId.copy();
+        this.isInstalled = other.isInstalled == null ? null : other.isInstalled.copy();
     }
 
     @Override
@@ -119,6 +124,13 @@ public class ApplicationsCriteria implements Serializable, Criteria {
         this.appCategoryId = appCategoryId;
     }
 
+    public BooleanFilter getIsInstalled() {
+        return isInstalled;
+    }
+
+    public void setIsInstalled(BooleanFilter isInstalled) {
+        this.isInstalled = isInstalled;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -137,7 +149,8 @@ public class ApplicationsCriteria implements Serializable, Criteria {
             Objects.equals(appIcon, that.appIcon) &&
             Objects.equals(appPathResource, that.appPathResource) &&
             Objects.equals(appIntall, that.appIntall) &&
-            Objects.equals(appCategoryId, that.appCategoryId);
+            Objects.equals(appCategoryId, that.appCategoryId) &&
+            Objects.equals(isInstalled, that.isInstalled);
     }
 
     @Override
@@ -149,6 +162,7 @@ public class ApplicationsCriteria implements Serializable, Criteria {
         appShort,
         appIcon,
         appPathResource,
+        isInstalled,
         appIntall,
             appCategoryId
         );

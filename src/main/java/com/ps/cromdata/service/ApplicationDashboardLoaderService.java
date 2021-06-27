@@ -7,6 +7,7 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Service
@@ -23,10 +24,16 @@ public class ApplicationDashboardLoaderService {
     }
 
     public String pathResource(String location) throws IOException {
-        String path = resourceLoader.getResource("classpath:" + location).getURL().getPath();
-        if (path.startsWith("/")) {
-            path = path.substring(1, path.length());
+        try {
+            String path = resourceLoader.getResource("classpath:" + location).getURL().getPath();
+            if (path.startsWith("/")) {
+                path = path.substring(1, path.length());
+            }
+            return path;
+        } catch (FileNotFoundException exception) {
+            System.out.println(exception.getMessage());
+            return null;
         }
-        return path;
+
     }
 }

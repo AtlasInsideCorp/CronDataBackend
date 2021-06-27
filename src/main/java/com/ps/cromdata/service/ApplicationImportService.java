@@ -1,6 +1,7 @@
 package com.ps.cromdata.service;
 
 import com.ps.cromdata.domain.GrafanaDashboardResponse;
+import com.ps.cromdata.util.FilePermissionUtil;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static com.ps.cromdata.config.Constants.GRAFANA_URL;
 import static com.ps.cromdata.config.Constants.PROMETHEUS_PATH;
@@ -79,17 +81,26 @@ public class ApplicationImportService {
     public void copyDirectory(String sourceDirectoryLocation)
         throws IOException {
         String destinationDirectoryLocation = PROMETHEUS_PATH + "alerts/";
-        String finalSourceDirectoryLocation = processPath(sourceDirectoryLocation);
-        Files.walk(Paths.get(sourceDirectoryLocation))
-            .forEach(source -> {
-                Path destination = Paths.get(destinationDirectoryLocation, source.toString()
-                    .substring(finalSourceDirectoryLocation.length()));
+        try {
+            // source & destination directories
+            Path src = Paths.get(sourceDirectoryLocation);
+            Path dest = Paths.get(PROMETHEUS_PATH + "alerts/");
+            // create stream for `src`
+            Stream<Path> files = Files.walk(src);
+            // copy all files and folders from `src` to `dest`
+            files.forEach(file -> {
                 try {
-                    Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(file, dest.resolve(src.relativize(file)),
+                        StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
+            // close the stream
+            files.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
 //    public void copyFolder(Path src, Path dest) throws IOException {

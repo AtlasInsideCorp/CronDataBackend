@@ -34,9 +34,11 @@ public final class Constants {
 
     public static final String CLIENT_ENCRYPT_SECRET = "y5wmc02lbUtlxtzYuSHIObnBPo90RjEffYphOhqNZJYm0m8i4DQIC39hg66XgA0jofq0kEB9dqj1Ag9uJP2cH0jNUdyYBo7PrlDB";
     public static final String CONF_PARAM_PWD_TYPE_SECRET = "Cron.Pwd-53cr3t.5t4k!_3mpTy*";
-    public static final String GRAFANA_URL = "http://grafana.crondata.atlasinside.com/";
-    public static final String PROMETHEUS_URL = "http://prometheus.crondata.atlasinside.com/";
+    public static final String GRAFANA_URL = "http://grafana:3000/";
+//    public static final String GRAFANA_URL = "http://localhost:3000/";
+    public static final String PROMETHEUS_URL = "http://prometheus:9090/";
     public static final String PROMETHEUS_PATH = "/etc/prometheus/";
+//    public static final String PROMETHEUS_PATH = "D:/etc/prometheus/";
 
     private Constants() {
     }

@@ -2,9 +2,12 @@ package com.ps.cromdata.service;
 
 import com.ps.cromdata.domain.Targets;
 import com.ps.cromdata.repository.TargetsRepository;
+import com.ps.cromdata.util.FilePermissionUtil;
+import org.apache.commons.lang3.SystemUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
+import sun.awt.OSInfo;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -41,9 +44,17 @@ public class TargetConfigCreator {
             }
             System.out.println("************************ TARGET CREATING ******************");
             try {
-                Writer output = null;
-                File file = new File(PROMETHEUS_PATH + "targets/cron_targets.json");
+                Writer output;
+                String path = PROMETHEUS_PATH + "targets/cron_targets.json";
+                File file = new File(path);
                 file.getParentFile().mkdirs();
+                file.setReadable(true, false);
+                file.setWritable(true, false);
+                file.setExecutable(true, false);
+                if(SystemUtils.IS_OS_LINUX) {
+                    FilePermissionUtil perm = new FilePermissionUtil();
+                    perm.setPathPermission(path);
+                }
                 output = new BufferedWriter(new FileWriter(file));
                 output.write(jsonArray.toJSONString());
                 output.close();
