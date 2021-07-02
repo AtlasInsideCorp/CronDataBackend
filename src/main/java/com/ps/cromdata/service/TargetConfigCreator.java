@@ -2,15 +2,20 @@ package com.ps.cromdata.service;
 
 import com.ps.cromdata.domain.Targets;
 import com.ps.cromdata.repository.TargetsRepository;
+import com.ps.cromdata.util.FilePermissionUtil;
+import org.apache.commons.lang3.SystemUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
+import sun.awt.OSInfo;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.ps.cromdata.config.Constants.PROMETHEUS_PATH;
 
 @Component
 public class TargetConfigCreator {
@@ -39,8 +44,17 @@ public class TargetConfigCreator {
             }
             System.out.println("************************ TARGET CREATING ******************");
             try {
-                Writer output = null;
-                File file = new File("/etc/prometheus/targets/cron_targets.json");
+                Writer output;
+                String path = PROMETHEUS_PATH + "targets/cron_targets.json";
+                File file = new File(path);
+                file.getParentFile().mkdirs();
+                file.setReadable(true, false);
+                file.setWritable(true, false);
+                file.setExecutable(true, false);
+                if(SystemUtils.IS_OS_LINUX) {
+                    FilePermissionUtil perm = new FilePermissionUtil();
+                    perm.setPathPermission(path);
+                }
                 output = new BufferedWriter(new FileWriter(file));
                 output.write(jsonArray.toJSONString());
                 output.close();
@@ -57,12 +71,22 @@ public class TargetConfigCreator {
         JSONObject obj = new JSONObject();
         JSONObject jobJson = new JSONObject();
         List<String> targets = targetInstances.stream()
-            .map(TargetInstances -> TargetInstances.getHost() + ":" + TargetInstances.getPort().toString()).collect(Collectors.toList());
+            .map(this::buildTarget).collect(Collectors.toList());
         obj.put("targets", targets);
         jobJson.put("job", job);
         obj.put("labels", jobJson);
         return obj;
     }
+
+    private String buildTarget(Targets target) {
+        if (target.getPort() == null) {
+            return target.getHost();
+        } else {
+            return target.getHost() + ":" + target.getPort().toString();
+        }
+
+    }
+
 
     public void insertDefaultValues() {
         if (targetsRepository.findAll().isEmpty()) {

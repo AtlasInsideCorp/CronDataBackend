@@ -24,8 +24,7 @@ public class Targets implements Serializable {
     @Column(name = "host", nullable = false)
     private String host;
 
-    @NotNull
-    @Column(name = "port", nullable = false)
+    @Column(name = "port")
     private Integer port;
 
     @NotNull

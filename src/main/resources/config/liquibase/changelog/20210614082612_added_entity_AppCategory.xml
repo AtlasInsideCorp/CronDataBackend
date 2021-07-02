@@ -8,30 +8,24 @@
 
 
     <!--
-        Added the entity Targets.
+        Added the entity AppCategory.
     -->
-    <changeSet id="20210527035110-1" author="jhipster">
-        <createTable tableName="targets">
+    <changeSet id="20210614082612-1" author="jhipster">
+        <createTable tableName="app_category">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="host" type="varchar(255)">
-                <constraints nullable="false" />
+            <column name="category_name" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="ux_app_category_category_name" />
             </column>
-            <column name="port" type="integer">
-                <constraints nullable="true" />
-            </column>
-            <column name="job" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-            <column name="description" type="varchar(255)">
+            <column name="category_description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
 
-    <changeSet id="20210527035110-1-relations" author="jhipster">
+    <changeSet id="20210614082612-1-relations" author="jhipster">
 
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -44,11 +38,16 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet author="jd" id="20210527035110-2">
-        <addUniqueConstraint
-            columnNames="host, port,job"
-            constraintName="uk_target_composite"
-            tableName="targets"
-        />
+    <changeSet id="20210614082612-1-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/data/app_category.csv"
+                  separator=";"
+                  tableName="app_category">
+            <column name="id" type="numeric"/>
+            <column name="category_name" type="string"/>
+            <column name="category_description" type="string"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
     </changeSet>
+
 </databaseChangeLog>

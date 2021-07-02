@@ -1,0 +1,51 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "app_category",
+      "otherEntityName": "appCategory",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "categoryId",
+      "otherEntityRelationshipName": "applications"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "appName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "appDescription",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "appShort",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "appIcon",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "appPathResource",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "appIntall",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20210614084850",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "applications",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}
