@@ -2,6 +2,7 @@ package com.ps.cromdata.service;
 
 import com.ps.cromdata.domain.GrafanaDashboardResponse;
 import com.ps.cromdata.util.FilePermissionUtil;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -80,7 +81,6 @@ public class ApplicationImportService {
 
     public void copyDirectory(String sourceDirectoryLocation)
         throws IOException {
-        String destinationDirectoryLocation = PROMETHEUS_PATH + "alerts/";
         try {
             // source & destination directories
             Path src = Paths.get(sourceDirectoryLocation);
@@ -96,6 +96,16 @@ public class ApplicationImportService {
                     e.printStackTrace();
                 }
             });
+            if (SystemUtils.IS_OS_LINUX) {
+                File dir = new File(dest.toString());
+                File[] directoryListing = dir.listFiles();
+                FilePermissionUtil perm = new FilePermissionUtil();
+                if (directoryListing != null) {
+                    for (File child : directoryListing) {
+                        perm.setPathPermission(child.getPath());
+                    }
+                }
+            }
             // close the stream
             files.close();
         } catch (IOException ex) {

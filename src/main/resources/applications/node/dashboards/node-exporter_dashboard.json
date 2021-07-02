@@ -64,7 +64,7 @@
         }
       ]
     },
-    "description": "【English version】Update 2020.10.10, add the overall resource overview! Support Grafana6&7,Support Node Exporter v0.16 and above.Optimize the main metrics display. Includes: CPU, memory, disk IO, network, temperature and other monitoring metrics。https://github.com/starsliao/Prometheus",
+    "description": "Optimize the main metrics display. Includes: CPU, memory, disk IO, network, temperature and other monitoring metrics",
     "editable": true,
     "gnetId": 11074,
     "graphTooltip": 0,
@@ -499,7 +499,7 @@
         ],
         "timeFrom": null,
         "timeShift": null,
-        "title": "Server Resource Overview【JOB：$job，Total：$total】",
+        "title": "Server Resource Overview [JOB：$job，Total：$total]",
         "transform": "table",
         "type": "table-old"
       },
@@ -979,7 +979,7 @@
         },
         "id": 189,
         "panels": [],
-        "title": "Resource Details：【$show_hostname】",
+        "title": "Resource Details： [$show_hostname] ",
         "type": "row"
       },
       {
@@ -1336,7 +1336,7 @@
             "refId": "B"
           }
         ],
-        "title": "【$show_hostname】：Disk Space Used Basic(EXT?/XFS)",
+        "title": " [$show_hostname] ：Disk Space Used Basic(EXT?/XFS)",
         "transform": "table",
         "type": "table-old"
       },
