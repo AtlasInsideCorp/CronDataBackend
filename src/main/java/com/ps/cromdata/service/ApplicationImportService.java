@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import springfox.documentation.spring.web.json.Json;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,11 +48,25 @@ public class ApplicationImportService {
     public void deleteDashboard(String uid) {
         try {
             RestTemplate restTemplate = new RestTemplate();
-            String uri = GRAFANA_URL + "/api/dashboards/uid/" + uid;
-            restTemplate.delete(uri, Object.class);
+            if (dashboardExist(uid)) {
+                String uri = GRAFANA_URL + "/api/dashboards/uid/" + uid;
+                restTemplate.delete(uri, Object.class);
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw e;
+        }
+    }
+
+    private boolean dashboardExist(String uid) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String uri = GRAFANA_URL + "/api/dashboards/uid/" + uid;
+            ResponseEntity<Object> response = restTemplate.getForEntity(uri, Object.class);
+            return response.getStatusCodeValue() == 200;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 

@@ -101,13 +101,13 @@ public class TargetConfigCreator {
                 " performance characteristics of their running containers.");
             Targets nodeExporter = new Targets();
             nodeExporter.setId(2L);
-            nodeExporter.setHost(hostname);
+            nodeExporter.setHost("node-exporter");
             nodeExporter.setPort(9100);
             nodeExporter.setJob("node-exporter");
             nodeExporter.setDescription("Node Exporter exposes a wide variety of hardware- and kernel-related metrics.");
             Targets alertManager = new Targets();
             alertManager.setId(3L);
-            alertManager.setHost(hostname);
+            alertManager.setHost("alertmanager");
             alertManager.setPort(9093);
             alertManager.setJob("alert-manager");
             alertManager.setDescription("The Alert Manager handles alerts sent by client applications" +
