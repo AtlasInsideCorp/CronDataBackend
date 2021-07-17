@@ -26,5 +26,6 @@
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
     <include file="config/liquibase/changelog/20210624_added_column_uuid_Applications.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/202107170237_add_iis_application.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
