@@ -1132,7 +1132,7 @@
         "timeFrom": null,
         "timeRegions": [],
         "timeShift": null,
-        "title": "网络详情",
+        "title": "Network details",
         "tooltip": {
           "shared": true,
           "sort": 2,
@@ -2291,7 +2291,7 @@
       ]
     },
     "time": {
-      "from": "now-30d",
+      "from": "now-30m",
       "to": "now"
     },
     "timepicker": {

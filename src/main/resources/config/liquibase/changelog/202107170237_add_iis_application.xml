@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Applications.
+    -->
+    <changeSet id="202107170237-1" author="jd">
+
+        <sql dbms="postgresql" splitStatements="true" stripComments="true">
+            INSERT INTO public.applications
+            (id,app_name,app_description,app_short,app_icon,app_path_resource,installation_link,is_installed,app_category_id,uuid)
+            VALUES
+            (25,'IIS','Internet Information Services is an extensible web server software created by Microsoft for use
+            with the Windows NT family. IIS supports HTTP, HTTP/2, HTTPS, FTP, FTPS, SMTP and
+            NNTP.','APP_IIS','/assets/icons/logos/iis.svg','/applications/iis','https://github.com/prometheus-community/windows_exporter',false,3,NULL);
+        </sql>
+
+    </changeSet>
+</databaseChangeLog>
