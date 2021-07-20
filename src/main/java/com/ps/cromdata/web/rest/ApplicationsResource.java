@@ -146,8 +146,10 @@ public class ApplicationsResource {
             }
         }
         String location = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/rules");
-        if (Files.exists(Paths.get(location)))
-            applicationImportService.deleteRules(location);
+        if (location != null && !location.isEmpty()) {
+            if (Files.exists(Paths.get(location)))
+                applicationImportService.deleteRules(location);
+        }
         applications.setIsInstalled(false);
         applications.setUid(null);
         Applications result = applicationsService.save(applications);
