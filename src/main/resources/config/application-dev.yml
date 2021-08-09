@@ -17,7 +17,7 @@ logging:
   level:
     ROOT: DEBUG
     io.github.jhipster: DEBUG
-    com.ps.cromdata: DEBUG
+    com.atlasinside.crondata: DEBUG
 
 spring:
   profiles:

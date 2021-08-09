@@ -1,1 +1,1 @@
-org.springframework.boot.env.EnvironmentPostProcessor=com.ps.cromdata.processor.ReadDatabasePropertiesPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=com.atlasinside.crondata.processor.ReadDatabasePropertiesPostProcessor
