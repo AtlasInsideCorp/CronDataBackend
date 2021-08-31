@@ -37,6 +37,7 @@ public final class Constants {
     public static final String GRAFANA_URL = "http://grafana:3000/";
     public static final String PROMETHEUS_URL = "http://prometheus:9090/";
     public static final String PROMETHEUS_PATH = "/etc/prometheus/";
+    public static final String MODULES_PATH = "/usr/share/crondata";
 
     private Constants() {
     }

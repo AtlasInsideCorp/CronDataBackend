@@ -21,13 +21,13 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
-public class ApplicationImportService {
+public class ApplicationModuleService {
 
-    public ApplicationImportService() {
+    public ApplicationModuleService() {
     }
 
     public String saveDashboard(Object grafanaRawDashboard) {
-        ResponseEntity<GrafanaDashboardResponse> result = null;
+        ResponseEntity<GrafanaDashboardResponse> result;
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -70,66 +70,58 @@ public class ApplicationImportService {
     public void deleteRules(String sourceDirectoryLocation)
         throws IOException {
         String destinationDirectoryLocation = Constants.PROMETHEUS_PATH + "alerts/";
-        String finalSourceDirectoryLocation = processPath(sourceDirectoryLocation);
-        Files.walk(Paths.get(sourceDirectoryLocation))
-            .forEach(source -> {
-                Path destination = Paths.get(destinationDirectoryLocation, source.toString()
-                    .substring(finalSourceDirectoryLocation.length()));
-                try {
-                    Files.deleteIfExists(destination);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-    }
-
-    private String processPath(String location) {
-        if (location.startsWith("/")) {
-            location = location.substring(1, location.length());
+        File[] ruleFiles = getFileListFromFolder(sourceDirectoryLocation);
+        for (File ruleFile : ruleFiles) {
+            Files.deleteIfExists(Paths.get(destinationDirectoryLocation + ruleFile.getName()));
         }
-        return location;
     }
 
+    /**
+     * Return all file in folder
+     *
+     * @param location Location to extract files
+     * @return File[]
+     */
+    public File[] getFileListFromFolder(String location) {
+        File moduleFolder = new File(location);
+        return moduleFolder.listFiles();
+    }
 
-    public void copyDirectory(String sourceDirectoryLocation)
-        throws IOException {
-        try {
-            // source & destination directories
-            Path src = Paths.get(sourceDirectoryLocation);
-            Path dest = Paths.get(Constants.PROMETHEUS_PATH + "alerts/");
-            // create stream for `src`
-            Stream<Path> files = Files.walk(src);
-            // copy all files and folders from `src` to `dest`
-            files.forEach(file -> {
-                try {
-                    Files.copy(file, dest.resolve(src.relativize(file)),
-                        StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            if (SystemUtils.IS_OS_LINUX) {
-                File dir = new File(dest.toString());
-                File[] directoryListing = dir.listFiles();
-                FilePermissionUtil perm = new FilePermissionUtil();
-                if (directoryListing != null) {
-                    for (File child : directoryListing) {
-                        perm.setPathPermission(child.getPath());
-                    }
+    /**
+     * Copy directory, use to copy rules to prometheus target
+     *
+     * @param sourceDirectoryLocation Copy to
+     * @throws IOException
+     */
+    public void copyDirectory(String sourceDirectoryLocation) throws IOException {
+        // source & destination directories
+        Path src = Paths.get(sourceDirectoryLocation);
+        Path dest = Paths.get(Constants.PROMETHEUS_PATH + "alerts/");
+        // create stream for `src`
+        Stream<Path> files = Files.walk(src);
+        // copy all files and folders from `src` to `dest`
+        files.forEach(file -> {
+            try {
+                Files.copy(file, dest.resolve(src.relativize(file)),
+                    StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        if (SystemUtils.IS_OS_LINUX) {
+            File dir = new File(dest.toString());
+            File[] directoryListing = dir.listFiles();
+            FilePermissionUtil perm = new FilePermissionUtil();
+            if (directoryListing != null) {
+                for (File child : directoryListing) {
+                    perm.setPathPermission(child.getPath());
                 }
             }
-            // close the stream
-            files.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
+        // close the stream
+        files.close();
     }
 
-//    public void copyFolder(Path src, Path dest) throws IOException {
-//        try (Stream<Path> stream = Files.walk(src)) {
-//            stream.forEach(source -> copy(source, dest.resolve(src.relativize(source))));
-//        }
-//    }
 
     public void copy(String path) {
         Path alert = Paths.get(path);

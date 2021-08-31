@@ -1,22 +1,17 @@
 package com.atlasinside.crondata.web.rest;
 
 import com.atlasinside.crondata.domain.Applications;
-import com.atlasinside.crondata.service.ApplicationDashboardLoaderService;
 import com.atlasinside.crondata.service.ApplicationsQueryService;
 import com.atlasinside.crondata.service.ApplicationsService;
 import com.atlasinside.crondata.service.dto.ApplicationsCriteria;
 import com.atlasinside.crondata.web.rest.errors.BadRequestAlertException;
-import com.atlasinside.crondata.service.ApplicationImportService;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -52,18 +46,12 @@ public class ApplicationsResource {
 
     private final ApplicationsQueryService applicationsQueryService;
 
-    private final ApplicationDashboardLoaderService applicationDashboardLoaderService;
-
-    private final ApplicationImportService applicationImportService;
 
     public ApplicationsResource(ApplicationsService applicationsService,
-                                ApplicationsQueryService applicationsQueryService,
-                                ApplicationImportService applicationImportService,
-                                ApplicationDashboardLoaderService applicationDashboardLoaderService) {
+                                ApplicationsQueryService applicationsQueryService) {
         this.applicationsService = applicationsService;
         this.applicationsQueryService = applicationsQueryService;
-        this.applicationDashboardLoaderService = applicationDashboardLoaderService;
-        this.applicationImportService = applicationImportService;
+
     }
 
     /**
@@ -94,33 +82,12 @@ public class ApplicationsResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/applications/activate")
-    public ResponseEntity<Applications> activateApplications(@Valid @RequestBody Applications applications) throws URISyntaxException, IOException, ParseException, NoSuchFieldException {
-        log.debug("REST request to update Applications : {}", applications);
+    public ResponseEntity<Applications> activateApplications(@Valid @RequestBody Applications applications) throws IOException, ParseException {
+        log.debug("REST request to activate Applications : {}", applications);
         if (applications.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        String dashboardsLocation = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/dashboards");
-        if (Files.exists(Paths.get(dashboardsLocation))) {
-            Resource[] dashboards = applicationDashboardLoaderService.loadResources("classpath*:" + applications.getAppPathResource() + "/dashboards/*.json");
-            JSONParser parser = new JSONParser();
-            String uids = "";
-            for (Resource dashboard : dashboards) {
-                Object obj = parser.parse(new FileReader(dashboard.getFile().getPath()));
-                JSONObject jsonObject = (JSONObject) obj;
-                String response = applicationImportService.saveDashboard(jsonObject);
-                uids = String.join(",", uids, response);
-            }
-            if (uids.startsWith(","))
-                uids = uids.substring(1, uids.length());
-            applications.setUid(uids);
-        }
-        String location = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/rules");
-        if (location != null) {
-            if (Files.exists(Paths.get(location)))
-                applicationImportService.copyDirectory(location);
-        }
-        applications.setIsInstalled(true);
-        Applications result = applicationsService.save(applications);
+        Applications result = applicationsService.save(applicationsService.activateModule(applications));
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, applications.getId().toString()))
             .body(result);
@@ -139,20 +106,7 @@ public class ApplicationsResource {
         if (applications.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (applications.getUid() != null) {
-            String[] dashboards = applications.getUid().split(",");
-            for (String uid : dashboards) {
-                applicationImportService.deleteDashboard(uid);
-            }
-        }
-        String location = applicationDashboardLoaderService.pathResource(applications.getAppPathResource() + "/rules");
-        if (location != null && !location.isEmpty()) {
-            if (Files.exists(Paths.get(location)))
-                applicationImportService.deleteRules(location);
-        }
-        applications.setIsInstalled(false);
-        applications.setUid(null);
-        Applications result = applicationsService.save(applications);
+        Applications result = applicationsService.save(applicationsService.deactivateModule(applications));
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, applications.getId().toString()))
             .body(result);
