@@ -1,7 +1,6 @@
 package com.atlasinside.crondata;
 
 import com.atlasinside.crondata.config.ApplicationProperties;
-
 import io.github.jhipster.config.DefaultProfileUtil;
 import io.github.jhipster.config.JHipsterConstants;
 

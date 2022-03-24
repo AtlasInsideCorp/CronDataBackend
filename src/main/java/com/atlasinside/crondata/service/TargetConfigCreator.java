@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +53,7 @@ public class TargetConfigCreator {
                 file.setReadable(true, false);
                 file.setWritable(true, false);
                 file.setExecutable(true, false);
-                if(SystemUtils.IS_OS_LINUX) {
+                if (SystemUtils.IS_OS_LINUX) {
                     FilePermissionUtil perm = new FilePermissionUtil();
                     perm.setPathPermission(path);
                 }
@@ -92,6 +94,13 @@ public class TargetConfigCreator {
         if (targetsRepository.findAll().isEmpty()) {
             System.out.println("************************** INIT DEFAULT TARGETS IN DATABASE ************************** ");
             String hostname = System.getenv("CRONDATA_SERVER_HOST");
+            if (hostname == null) {
+                try {
+                    hostname = String.valueOf(InetAddress.getLocalHost().getHostName());
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+            }
             Targets cadvisor = new Targets();
             cadvisor.setId(1L);
             cadvisor.setHost(hostname);
