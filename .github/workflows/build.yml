@@ -45,6 +45,6 @@ jobs:
           IMAGE_NAME: crondata-backend
           IMAGE_TAG: testing
         run: |
-          ls
+          cd target && ls
           docker build -t utmstack.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
           docker push utmstack.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
