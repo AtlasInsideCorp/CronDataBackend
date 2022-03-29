@@ -7,6 +7,7 @@ import com.atlasinside.crondata.domain.User;
 import io.github.jhipster.config.JHipsterProperties;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import javax.mail.MessagingException;
@@ -67,16 +68,36 @@ public class MailService {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(applicationPropertyService.getProperty(Constants.PROP_MAIL_HOST));
         mailSender.setPort(Integer.parseInt(applicationPropertyService.getProperty(Constants.PROP_MAIL_PORT)));
-        mailSender.setDefaultEncoding("");
-        mailSender.setUsername(applicationPropertyService.getProperty(Constants.PROP_MAIL_USER));
         mailSender.setPassword(applicationPropertyService.getProperty(Constants.PROP_MAIL_PASS));
+        mailSender.setUsername(applicationPropertyService.getProperty(Constants.PROP_MAIL_USER));
+        mailSender.setProtocol(applicationPropertyService.getProperty(Constants.PROP_MAIL_PROTOCOL));
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("spring.mail.protocol", applicationPropertyService.getProperty(Constants.PROP_MAIL_PROTOCOL));
-        props.put("mail.smtps.starttls.enable", applicationPropertyService.getProperty(Constants.PROP_MAIL_SMTP_SSL).equals("true"));
         props.put("mail.smtp.auth", applicationPropertyService.getProperty(Constants.PROP_MAIL_SMTP_SSL_TRUST));
-
+        props.put("mail.smtp.starttls.enable", applicationPropertyService.getProperty(Constants.PROP_MAIL_SMTP_SSL).equals("true"));
+        props.put("mail.smtp.ssl.trust", applicationPropertyService.getProperty(Constants.PROP_MAIL_SMTP_SSL_TRUST));
         return mailSender;
+    }
+
+    /**
+     * Send a test email to the passed address to check if the email configuration is ok
+     *
+     * @param to Address to send the testing email
+     */
+    public void sendCheckEmail(List<String> to) throws Exception {
+        try {
+            JavaMailSender javaMailSender = getMailConfig();
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, StandardCharsets.UTF_8.name());
+            message.setTo(to.toArray(new String[]{}));
+            message.setFrom(applicationPropertyService.getProperty(Constants.PROP_MAIL_FROM));
+            message.setSubject("Testing mail configuration");
+            message.setText("Your email configuration is OK !!!");
+            javaMailSender.send(mimeMessage);
+        } catch (Exception e) {
+            String msg = String.format("Email could not be sent to user(s) %1$s: %2$s", String.join(",", to), e.getMessage());
+            throw new Exception(msg);
+        }
     }
 
     @Async
