@@ -1,6 +1,7 @@
 package com.atlasinside.crondata.service;
 
 import com.atlasinside.crondata.domain.ConfigurationSection;
+import com.atlasinside.crondata.domain.User;
 import com.atlasinside.crondata.repository.ConfigurationSectionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,9 +26,14 @@ public class ConfigurationSectionService {
     private final Logger log = LoggerFactory.getLogger(ConfigurationSectionService.class);
 
     private final ConfigurationSectionRepository configurationSectionRepository;
+    private final MailService mailService;
+    private final UserService userService;
 
-    public ConfigurationSectionService(ConfigurationSectionRepository configurationSectionRepository) {
+    public ConfigurationSectionService(ConfigurationSectionRepository configurationSectionRepository,
+                                       MailService mailService, UserService userService) {
         this.configurationSectionRepository = configurationSectionRepository;
+        this.mailService = mailService;
+        this.userService = userService;
     }
 
     /**
@@ -72,6 +80,17 @@ public class ConfigurationSectionService {
     public void delete(Long id) {
         log.debug("Request to delete ConfigurationSection : {}", id);
         configurationSectionRepository.deleteById(id);
+    }
+
+    public void checkEmailConfiguration() throws Exception {
+        final String ctx = CLASSNAME + ".checkEmailConfiguration";
+        try {
+            User user = userService.getCurrentUserLogin();
+            List<String> to = Collections.singletonList(user.getEmail());
+            mailService.sendCheckEmail(to);
+        } catch (Exception e) {
+            throw new Exception(ctx + ": " + e.getMessage());
+        }
     }
 
 }

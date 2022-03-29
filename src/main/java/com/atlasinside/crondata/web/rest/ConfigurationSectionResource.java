@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -136,5 +137,19 @@ public class ConfigurationSectionResource {
         log.debug("REST request to delete ConfigurationSection : {}", id);
         configurationSectionService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/configuration-sections/checkEmailConfiguration")
+    public ResponseEntity<Void> checkEmailConfiguration() {
+        final String ctx = ".checkEmailConfiguration";
+        try {
+            configurationSectionService.checkEmailConfiguration();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            String msg = ctx + ": " + e.getMessage();
+            log.error(msg);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(
+                HeaderUtil.createFailureAlert("CronData", false, "Section", "checkEmailConfiguration", msg)).body(null);
+        }
     }
 }

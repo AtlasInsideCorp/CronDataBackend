@@ -9,6 +9,7 @@ import com.atlasinside.crondata.config.Constants;
 import com.atlasinside.crondata.domain.Authority;
 import com.atlasinside.crondata.domain.User;
 
+import com.atlasinside.crondata.util.exceptions.CurrentUserLoginNotFoundException;
 import io.github.jhipster.security.RandomUtil;
 
 import org.slf4j.Logger;
@@ -300,5 +301,10 @@ public class UserService {
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
+    }
+
+    public User getCurrentUserLogin() {
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new CurrentUserLoginNotFoundException("No current user login was found"));
+        return userRepository.findOneWithAuthoritiesByLogin(userLogin).orElseThrow(() -> new CurrentUserLoginNotFoundException(String.format("No user with login %1$s was found", userLogin)));
     }
 }
